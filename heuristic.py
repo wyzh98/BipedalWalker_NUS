@@ -54,8 +54,8 @@ HULL_POLY =[
 LEG_DOWN = -8/SCALE
 LEG_W, LEG_H = 8/SCALE, 34/SCALE
 
-VIEWPORT_W = 600
-VIEWPORT_H = 400
+VIEWPORT_W = 1920
+VIEWPORT_H = 1080
 
 TERRAIN_STEP   = 14/SCALE
 TERRAIN_LENGTH = 200     # in steps
@@ -526,6 +526,7 @@ if __name__=="__main__":
             print("hull " + str(["{:+0.2f}".format(x) for x in s[0:4] ]))
             print("leg0 " + str(["{:+0.2f}".format(x) for x in s[4:9] ]))
             print("leg1 " + str(["{:+0.2f}".format(x) for x in s[9:14]]))
+            print("lidar" + str(["{:+0.2f}".format(x) for x in s[14:]]))
         steps += 1
 
         contact0 = s[8]

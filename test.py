@@ -315,7 +315,7 @@ if __name__ == '__main__':
     seed = np.random.seed(666)
 
     print('\n+++++++++++++++++++++++++++++++++')
-    print('BipedalWalker-v2 Starts...  >_')
+    print('BipedalWalker-v3 Starts...  >_')
     print('+++++++++++++++++++++++++++++++++')
     print("><><><><><><><><><><><><><><><><>")
     print("-----------------------------------")
