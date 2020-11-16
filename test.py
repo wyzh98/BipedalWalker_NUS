@@ -90,8 +90,8 @@ class AGENT:
                            'alpha': self.alpha, 'tau': self.tau, 'dc': self.dc, 'Batch': self.batch}
 
         if os.path.isfile('./' + self.s_link):
-            self.message = ["\nLOAD existing keras model....", self.model.summary()]
             self.model = load_model(self.s_link)
+            self.message = ["\nLOAD existing keras model....", self.model.summary()]
         else:
             self.message = '\nBuilding New Model >_'
             ### Setting Actor ###
@@ -143,8 +143,8 @@ class AGENT:
         # Build Network for Actor
         # input=[lidar_input,state_input]
         lidar_input = Input(shape=(self.nx_lidar, 1))
-        lidar_conv = Conv1D(64, 4, activation='relu')(lidar_input)
-        pool = MaxPooling1D(4)(lidar_conv)
+        lidar_conv = Conv1D(64, 3, activation='relu')(lidar_input)
+        pool = MaxPooling1D(8)(lidar_conv)
         flat = Flatten()(pool)
 
         state_input = Input(shape=(self.nx_obs,))
@@ -247,7 +247,7 @@ class AGENT:
     def TRAIN(self, batch):
 
         if len(self.deck) < batch:
-            return
+            return {None: None}
         # Random sample
         sample_indx = random.sample(self.deck, batch)
 
@@ -303,7 +303,7 @@ if __name__ == '__main__':
     config = tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     sess = tf.Session(config=config)
-    K.set_session(sess)
+    # K.set_session(sess)
     agent = AGENT(nx, ny, s_link, sess, BATCH)
 
     rewards_over_time = []
@@ -341,7 +341,7 @@ if __name__ == '__main__':
 
             action = agent.choose_action(observation)
             action = action.reshape((4,))
-            observation_new, reward, flag, inf = env.step(np.clip(action, -1, 1))
+            observation_new, reward, flag, _ = env.step(np.clip(action, -1, 1))
             observation_new = observation_new.reshape((1, 24))
             # Store new information
             agent.storing(observation, action, reward, observation_new, flag)

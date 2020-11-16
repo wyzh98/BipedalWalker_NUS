@@ -54,8 +54,8 @@ HULL_POLY =[
 LEG_DOWN = -8/SCALE
 LEG_W, LEG_H = 8/SCALE, 34/SCALE
 
-VIEWPORT_W = 1920
-VIEWPORT_H = 1080
+VIEWPORT_W = 1000
+VIEWPORT_H = 800
 
 TERRAIN_STEP   = 14/SCALE
 TERRAIN_LENGTH = 200     # in steps
@@ -505,7 +505,7 @@ class BipedalWalkerHardcore(BipedalWalker):
 
 if __name__=="__main__":
     # Heurisic: suboptimal, have no notion of balance.
-    env = BipedalWalker()
+    env = BipedalWalkerHardcore()
     env.reset()
     steps = 0
     total_reward = 0
