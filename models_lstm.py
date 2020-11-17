@@ -86,7 +86,7 @@ class PPO:
             # sigma = tf.layers.dense(layer_a2, self.a_dim, tf.nn.softplus, kernel_regularizer=reg)
             # sigma = tf.get_variable(name='pi_sigma', shape=self.a_dim, initializer=tf.constant_initializer(0.5))
             # sigma = tf.clip_by_value(sigma, 0.0, 1.0)
-            norm_dist = tf.distributions.Normal(loc=mu * self.a_bound, scale=[.5,.5,.5,.5])
+            norm_dist = tf.distributions.Normal(loc=mu * self.a_bound, scale=[.1,.1,.1,.1])
         params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=name)
         return norm_dist, params
 

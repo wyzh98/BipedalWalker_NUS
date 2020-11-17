@@ -48,7 +48,7 @@ class PPO:
         self.global_step = tf.train.get_or_create_global_step()
         self.saver = tf.train.Saver()
         # Loss functions and training
-        epsilon_decay = tf.train.polynomial_decay(self.EPSILON, self.global_step, self.EPS_LEN, 0.1, power=1)
+        epsilon_decay = tf.train.polynomial_decay(self.EPSILON, self.global_step, self.EPS_LEN, 0.1, power=0)
         ratio = tf.maximum(pi.prob(batch['actions']), 1e-6) / tf.maximum(pi_old.prob(batch['actions']), 1e-6)
         ratio = tf.clip_by_value(ratio, 0, 10)
         surr1 = batch['advantage'] * ratio
@@ -65,7 +65,8 @@ class PPO:
         self.sess.run(tf.global_variables_initializer())
 
         # Tensorboard
-        self.writer = tf.summary.FileWriter(summary_dir)
+        if summary_dir is not None:
+            self.writer = tf.summary.FileWriter(summary_dir)
         tf.summary.scalar('Loss/Policy', loss_pg)
         tf.summary.scalar('Loss/Value', loss_vf)
         tf.summary.scalar('Loss/Entropy', loss_entropy)
@@ -82,8 +83,9 @@ class PPO:
         with tf.variable_scope(name, reuse=reuse):
             layer_a1 = tf.layers.dense(state_in, 512, tf.nn.relu, kernel_regularizer=reg)
             layer_a2 = tf.layers.dense(layer_a1, 256, tf.nn.relu, kernel_regularizer=reg)
-            mu = tf.layers.dense(layer_a2, self.a_dim, tf.nn.tanh, kernel_regularizer=reg)
-            sigma = tf.layers.dense(layer_a2, self.a_dim, tf.nn.softplus, kernel_regularizer=reg)
+            layer_a3 = tf.layers.dropout(layer_a2, rate=0.5)
+            mu = tf.layers.dense(layer_a3, self.a_dim, tf.nn.tanh, kernel_regularizer=reg)
+            sigma = tf.layers.dense(layer_a3, self.a_dim, tf.nn.softplus, kernel_regularizer=reg)
             # sigma = tf.get_variable(name='pi_sigma', shape=self.a_dim, initializer=tf.constant_initializer(0.5))
             sigma = tf.clip_by_value(sigma, 0.0, 1.0)
             norm_dist = tf.distributions.Normal(loc=mu * self.a_bound, scale=sigma)
@@ -95,7 +97,8 @@ class PPO:
         with tf.variable_scope(name, reuse=reuse):
             layer_c1 = tf.layers.dense(state_in, 512, tf.nn.relu, kernel_regularizer=reg)
             layer_c2 = tf.layers.dense(layer_c1, 256, tf.nn.relu, kernel_regularizer=reg)
-            vf = tf.layers.dense(layer_c2, 1, kernel_regularizer=reg)
+            layer_c3 = tf.layers.dropout(layer_c2, rate=0.5)
+            vf = tf.layers.dense(layer_c3, 1, kernel_regularizer=reg)
         params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=name)
         return vf, params
 

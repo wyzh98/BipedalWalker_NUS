@@ -505,7 +505,7 @@ class BipedalWalkerHardcore(BipedalWalker):
 
 if __name__=="__main__":
     # Heurisic: suboptimal, have no notion of balance.
-    env = BipedalWalkerHardcore()
+    env = BipedalWalker()
     env.reset()
     steps = 0
     total_reward = 0

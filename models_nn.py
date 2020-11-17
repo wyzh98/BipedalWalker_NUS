@@ -80,10 +80,11 @@ class PPO:
     def build_anet(self, state_in, name, reuse=False):
         reg = tf.contrib.layers.l2_regularizer(1e-3)
         with tf.variable_scope(name, reuse=reuse):
-            layer_a1 = tf.layers.dense(state_in, 512, tf.nn.relu)
-            layer_a2 = tf.layers.dense(layer_a1, 256, tf.nn.relu)
-            mu = tf.layers.dense(layer_a2, self.a_dim, tf.nn.tanh)
-            sigma = tf.layers.dense(layer_a2, self.a_dim, tf.nn.softplus)
+            layer_a1 = tf.layers.dense(state_in, 512, tf.nn.relu, kernel_regularizer=reg)
+            layer_a2 = tf.layers.dense(layer_a1, 256, tf.nn.relu, kernel_regularizer=reg)
+            layer_a3 = tf.layers.dense(layer_a2, 256, tf.nn.relu, kernel_regularizer=reg)
+            mu = tf.layers.dense(layer_a2+layer_a3, self.a_dim, tf.nn.tanh, kernel_regularizer=reg)
+            sigma = tf.layers.dense(layer_a2, self.a_dim, tf.nn.softplus, kernel_regularizer=reg)
             # sigma = tf.get_variable(name='pi_sigma', shape=self.a_dim, initializer=tf.constant_initializer(0.5))
             sigma = tf.clip_by_value(sigma, 0.0, 1.0)
             norm_dist = tf.distributions.Normal(loc=mu * self.a_bound, scale=sigma)
@@ -93,9 +94,10 @@ class PPO:
     def build_cnet(self, state_in, name, reuse=False):
         reg = tf.contrib.layers.l2_regularizer(1e-3)
         with tf.variable_scope(name, reuse=reuse):
-            layer_c1 = tf.layers.dense(state_in, 512, tf.nn.relu)
-            layer_c2 = tf.layers.dense(layer_c1, 256, tf.nn.relu)
-            vf = tf.layers.dense(layer_c2, 1, kernel_regularizer=reg)
+            layer_c1 = tf.layers.dense(state_in, 256, tf.nn.relu, kernel_regularizer=reg)
+            layer_c2 = tf.layers.dense(layer_c1, 256, tf.nn.relu, kernel_regularizer=reg)
+            layer_c3 = tf.layers.dense(layer_c2, 256, tf.nn.relu, kernel_regularizer=reg)
+            vf = tf.layers.dense(layer_c2+layer_c3, 1, kernel_regularizer=reg)
         params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=name)
         return vf, params
 
