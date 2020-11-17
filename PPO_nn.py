@@ -9,6 +9,7 @@ from utils import discount, RunningStats, make_gif
 GAMMA = 0.99
 LAMBDA = 0.95  # advantage estimation discounting factor (lambda in the paper)
 STEPBATCH = 8192
+EPISODE_MAX = 100000
 IS_HARDCORE = False
 IS_RESTORED = False
 IS_OUTPUTGIF = True
@@ -17,11 +18,9 @@ if IS_RESTORED:
 else:
     MODEL_PATH = None
 if IS_HARDCORE:
-    EPISODE_MAX = 100000
     ENV = 'BipedalWalkerHardcore-v3'
     RESULT_ROOT_PATH = './log_hc/'
 else:
-    EPISODE_MAX = 10000
     ENV = 'BipedalWalker-v3'
     RESULT_ROOT_PATH = './log/'
 
