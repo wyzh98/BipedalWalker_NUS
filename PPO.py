@@ -14,7 +14,7 @@ IS_HARDCORE = False
 IS_RESTORED = False
 IS_OUTPUTGIF = True
 if IS_RESTORED:
-    MODEL_PATH = r'./log/20201117-043807/model.ckpt-9500'
+    MODEL_PATH = r'./events/ppo/model.ckpt-46000'
 else:
     MODEL_PATH = None
 if IS_HARDCORE:
@@ -88,7 +88,7 @@ def run():
                 episode_frames.append(a)
 
             if terminal:
-                print('Episode: %i' % episode, '| Reward: %.2f' % ep_r, '| Steps: %i' % ep_t)
+                print('Episode: %i' % episode, ' Reward: %.2f' % ep_r, ' Steps: %i' % ep_t)
                 rew_list.append(ep_r)
                 if episode % 100 == 0:
                     print('Mean reward of the past 100 episodes: ', str(np.mean(rew_list[-100:])))
