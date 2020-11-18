@@ -28,7 +28,7 @@ video.mp4                   # video for demonstration
 
 The robot learns to not tremble first, then try to crawl, and then learns to walk in a pretty weird way. After enough training, it learns to walk (even run).
 
-![](https://github.com/wyzh98/BipedalWalker_NUS/video.gif)
+![](https://github.com/wyzh98/BipedalWalker_NUS/blob/main/video.gif)
 
 
 
